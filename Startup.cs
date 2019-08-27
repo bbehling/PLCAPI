@@ -38,7 +38,14 @@ namespace TodoApi
             services.AddSingleton<IControlsDatabaseSettings>(sp =>
                 sp.GetRequiredService<IOptions<ControlsDatabaseSettings>>().Value);
 
+            services.Configure<BookstoreDatabaseSettings>(
+                Configuration.GetSection(nameof(BookstoreDatabaseSettings)));
+
+            services.AddSingleton<IBookstoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<BookstoreDatabaseSettings>>().Value);
+
             services.AddSingleton<ControlsService>();
+            services.AddSingleton<BookService>();
             services.AddMvc().AddNewtonsoftJson();
              
         }
@@ -46,6 +53,14 @@ namespace TodoApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseCors(builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+                //.AllowCredentials()); 
+            //app.UseMvc();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -61,6 +76,8 @@ namespace TodoApi
             {
                 endpoints.MapControllers();
             });
+
+
         }
     }
 }
