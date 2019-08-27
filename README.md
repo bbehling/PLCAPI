@@ -1,4 +1,4 @@
-# Controls API
+# PLC API
 
 ## Project Build
 ```
